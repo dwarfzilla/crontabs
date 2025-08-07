@@ -1,16 +1,8 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import { makeStyles } from '@material-ui/core/styles';
+import Container from '@mui/material/Container';
 import AddTabButton from '../components/form/AddTabButton';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-  addTabButton: {
-    margin: theme.spacing(4),
-  },
-}));
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 const Page = ({
   children,
@@ -21,13 +13,18 @@ const Page = ({
   description: string;
   children: any;
 }) => {
-  const classes = useStyles();
   return (
-    <Container fixed className={classes.root}>
-      <h1>{title}</h1>
-      <h4>{description}</h4>
-      {children}
-      <AddTabButton />
+    <Container fixed>
+        <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                {title}
+            </Typography>
+            <Typography variant="subtitle1" component="h4" gutterBottom>
+                {description}
+            </Typography>
+            {children}
+            <AddTabButton />
+        </Box>
     </Container>
   );
 };

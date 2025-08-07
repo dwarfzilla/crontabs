@@ -1,6 +1,5 @@
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import React from 'react';
 import CrontabsFormControl from '../../components/form/CrontabsFormControl';
 import { Schedule } from '../../types';
@@ -13,18 +12,7 @@ type PropsType = {
   schedule: Schedule;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  removeButton: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  schedule: {
-    paddingRight: theme.spacing(1),
-  },
-}));
-
 const ScheduleForm = ({ schedule }: PropsType) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
 
   function updateScheduleExpression(
@@ -42,7 +30,7 @@ const ScheduleForm = ({ schedule }: PropsType) => {
 
   return (
     <Grid container>
-      <Grid item xs={8} className={classes.schedule}>
+      <Grid item xs={8} sx={{ paddingRight: 1 }}>
         <CrontabsFormControl>
           <TextField
             fullWidth
@@ -58,7 +46,7 @@ const ScheduleForm = ({ schedule }: PropsType) => {
       <Grid item xs={3}>
         <ScheduleOperationSelect schedule={schedule} />
       </Grid>
-      <Grid item xs={1} className={classes.removeButton}>
+      <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
         <RemoveScheduleButton schedule={schedule} />
       </Grid>
     </Grid>

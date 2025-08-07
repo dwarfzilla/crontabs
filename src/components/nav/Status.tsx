@@ -1,8 +1,8 @@
 import React from 'react';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import Switch from '@material-ui/core/Switch';
-import Box from '@material-ui/core/Box';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Box from '@mui/material/Box';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const Status = () => {
   const [enabled, setEnabled] = useLocalStorage(

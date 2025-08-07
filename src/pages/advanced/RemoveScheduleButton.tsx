@@ -1,9 +1,9 @@
 import React from 'react';
 import { Schedule } from '../../types';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 import { removeSchedule } from '../../store/scheduleSlice';
 import { useDispatch } from 'react-redux';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 type PropsType = {
   schedule: Schedule;

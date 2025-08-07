@@ -15,27 +15,24 @@ export const tabsSlice = createSlice({
   name: "tabs",
   initialState,
   reducers: {
+    setTabs: (state, action: PayloadAction<TabsStateType>) => {
+        return action.payload;
+    },
     addTab: (state, action: PayloadAction<TabSansId>) => {
       const { payload: tab } = action;
       const id = uuid.v4();
-      return {
-        ...state,
-        [id]: {
+      state[id] = {
           id,
           ...tab
-        }
-      }
+      };
     },
     removeTab: (state, action: PayloadAction<string>) => {
-      const {[action.payload]: omittedKey, ...remainder} = state;
-      return {
-        ...remainder
-      };
+      delete state[action.payload];
     }
   }
 })
 
-export const { addTab, removeTab } = tabsSlice.actions;
+export const { setTabs, addTab, removeTab } = tabsSlice.actions;
 export const selectTabs = (state: RootState) => Object.values(state.tabs);
 export const selectAdvancedTabs = (state: RootState) => selectTabs(state).filter(tab => !tab.timeManagement);
 export const selectTimeManagementTabs = (state: RootState) => selectTabs(state).filter(tab => tab.timeManagement);

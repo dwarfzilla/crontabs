@@ -1,32 +1,18 @@
 import React from 'react';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-} from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  }),
-);
+import FormControl from '@mui/material/FormControl';
+import Box from '@mui/material/Box';
 
 const CrontabsFormControl = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const classes = useStyles();
   return (
-    <FormControl fullWidth className={classes.formControl}>
-      {children}
-    </FormControl>
+    <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+            {children}
+        </FormControl>
+    </Box>
   );
 };
 

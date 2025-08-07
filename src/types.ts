@@ -41,4 +41,3 @@ export type StoredSchedule = {
   operation: OperationType,
   expression: string,
 }
-

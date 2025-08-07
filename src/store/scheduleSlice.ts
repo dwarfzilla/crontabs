@@ -25,61 +25,64 @@ export const scheduleSlice = createSlice({
   name: "schedules",
   initialState,
   reducers: {
+    setSchedules: (state, action: PayloadAction<SchedulesStateType>) => {
+        return action.payload;
+    },
     addSchedule: (state, action: PayloadAction<AddSchedulePayload>) => {
       const id = uuid.v4();
-      return {
-        ...state,
-        [id]: {
-          id,
-          type: action.payload.type,
-          operation: "open",
-          tabId: action.payload.tabId,
-          expression: "",
-        }
-      }
-    },
-    removeSchedule: (state, action: PayloadAction<string>) => {
-      const {[action.payload]: omittedKey, ...remainder} = state;
-      return {
-        ...remainder
+      state[id] = {
+        id,
+        type: action.payload.type,
+        operation: "open",
+        tabId: action.payload.tabId,
+        expression: "",
       };
     },
-    updateSchedule: (state, action: PayloadAction<UpdateSchedulePayloadType>) => ({
-      ...state,
-      [action.payload.scheduleId]: {
-        ...state[action.payload.scheduleId],
-        ...action.payload.schedule
+    removeSchedule: (state, action: PayloadAction<string>) => {
+      delete state[action.payload];
+    },
+    updateSchedule: (state, action: PayloadAction<UpdateSchedulePayloadType>) => {
+      const { scheduleId, schedule } = action.payload;
+      if (state[scheduleId]) {
+        state[scheduleId] = { ...state[scheduleId], ...schedule };
       }
-    })
+    }
   }
 })
 
-function scheduleTime(schedule: Schedule): string {
-  var laterSchedule = getLaterScheduleForExpression(schedule);
-  var hour = laterSchedule?.schedules[0].h;
-  var minute = laterSchedule?.schedules[0].m;
-
-  if (minute < 10) {
-    minute = '0' + minute;
-  }
-
-  if (hour < 10) {
-    hour = '0' + hour;
-  }
-
-  return [hour, minute].join(':');
+interface ParsedSchedule {
+  time: string;
+  days: number[];
 }
 
-function scheduleDays(schedule: Schedule): number[] {
-  let result: number[] = [];
-  if (!schedule) {
-    return result;
-  }
+function parseSchedule(schedule: Schedule): ParsedSchedule | null {
+    if (!schedule || !schedule.expression) {
+        return null;
+    }
 
-  const laterSchedule = getLaterScheduleForExpression(schedule);
+    const laterSchedule = getLaterScheduleForExpression(schedule);
+    if (!laterSchedule || !laterSchedule.schedules || laterSchedule.schedules.length === 0) {
+        return null;
+    }
 
-  return laterSchedule?.schedules[0]?.d as number[];
+    const s = laterSchedule.schedules[0];
+    const hour = s.h?.[0];
+    const minute = s.m?.[0];
+
+    if (hour === undefined || minute === undefined) {
+        return null;
+    }
+
+    const time = [
+        hour < 10 ? '0' + hour : hour,
+        minute < 10 ? '0' + minute : minute
+    ].join(':');
+
+    const days = s.d || [];
+
+    return { time, days };
 }
+
 
 interface AdvancedSchedule {
   isOpen: boolean;
@@ -87,12 +90,16 @@ interface AdvancedSchedule {
   days: number[]
 }
 
-export const { addSchedule, removeSchedule, updateSchedule } = scheduleSlice.actions;
+export const { setSchedules, addSchedule, removeSchedule, updateSchedule } = scheduleSlice.actions;
 export const selectSchedulesByTabId = (tabId: string) => (state: RootState): Schedule[] => Object.values(state.schedules).filter(schedule => schedule.tabId === tabId);
-export const selectAdvancedSchedulesByTabId = (tabId: string) => (state: RootState): AdvancedSchedule[] => selectSchedulesByTabId(tabId)(state).map((schedule) => ({
-  isOpen: scheduleIsOpenOperation(schedule),
-  time: scheduleTime(schedule),
-  days: scheduleDays(schedule)
-}))
+export const selectAdvancedSchedulesByTabId = (tabId: string) => (state: RootState): AdvancedSchedule[] =>
+    selectSchedulesByTabId(tabId)(state).map((schedule) => {
+        const parsed = parseSchedule(schedule);
+        return {
+            isOpen: scheduleIsOpenOperation(schedule),
+            time: parsed?.time || '',
+            days: parsed?.days || []
+        }
+    });
 
 export default scheduleSlice.reducer;

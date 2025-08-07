@@ -1,7 +1,7 @@
 import React from 'react';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { OperationType, OperationTypes, Schedule } from '../../types';
 import CrontabsFormControl from '../../components/form/CrontabsFormControl';
 import { useDispatch } from 'react-redux';
@@ -28,7 +28,7 @@ const ScheduleOperationSelect = ({ schedule }: PropsType) => {
     <CrontabsFormControl>
       <InputLabel id={`schedule-operation-${schedule.id}`}>
         Operation
-      </InputLabel>
+      </InputInputLabel>
       <Select
         labelId={`schedule-operation-${schedule.id}`}
         key={`schedule-operation-${schedule.id}`}
