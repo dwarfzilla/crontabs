@@ -1,7 +1,8 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import { Tab } from '../../types';
 import AdvancedTabForm from './AdvancedTabForm';
+import Typography from '@mui/material/Typography';
 
 type PropsType = {
   tabs: Tab[];
@@ -10,9 +11,9 @@ type PropsType = {
 const TabList = ({ tabs }: PropsType) => {
   if (!tabs.length) {
     return (
-      <h2 style={{ textAlign: 'center' }}>
+      <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mt: 4 }}>
         Click the Add new tab button below to get started.
-      </h2>
+      </Typography>
     );
   }
 

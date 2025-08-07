@@ -2,22 +2,46 @@ import { StoredState } from "../types";
 
 const CRONTABS_KEY = "crontabs";
 
-export function restoreTabs() {
+export async function restoreTabs(): Promise<StoredState> {
   try {
-    const tabs = localStorage.getItem(CRONTABS_KEY);
-    if (tabs) {
-      return JSON.parse(tabs);
-    }
+    return new Promise((resolve) => {
+        if (chrome && chrome.storage) {
+            chrome.storage.local.get(CRONTABS_KEY, (result) => {
+                if (result[CRONTABS_KEY]) {
+                    resolve(JSON.parse(result[CRONTABS_KEY]));
+                } else {
+                    resolve([]);
+                }
+            });
+        } else {
+            // Fallback to localStorage for development outside the extension
+            const tabs = localStorage.getItem(CRONTABS_KEY);
+            if (tabs) {
+                resolve(JSON.parse(tabs));
+            } else {
+                resolve([]);
+            }
+        }
+    });
   } catch (e) {
     console.error("An error occurred when parsing local storage tabs", e);
+    return [];
   }
-  
-  return [];
 }
 
-export function saveTabs(state: StoredState) {
+export async function saveTabs(state: StoredState): Promise<void> {
   try {
-    localStorage.setItem(CRONTABS_KEY, JSON.stringify(state));
+    const dataToSave = JSON.stringify(state);
+    if (chrome && chrome.storage) {
+        return new Promise((resolve) => {
+            chrome.storage.local.set({ [CRONTABS_KEY]: dataToSave }, () => {
+                resolve();
+            });
+        });
+    } else {
+        // Fallback to localStorage for development outside the extension
+        localStorage.setItem(CRONTABS_KEY, dataToSave);
+    }
   } catch (e) {
     console.error("An error occurred when saving tabs to local storage", e);
   }

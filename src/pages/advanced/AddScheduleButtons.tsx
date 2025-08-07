@@ -1,8 +1,7 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import { ScheduleType, Tab } from '../../types';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import Button from '@mui/material/Button';
 import { addSchedule } from '../../store/scheduleSlice';
 import { useDispatch } from 'react-redux';
 
@@ -10,14 +9,7 @@ type PropsType = {
   tab: Tab;
 };
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    marginRight: theme.spacing(1),
-  },
-}));
-
 const AddScheduleButtons = ({ tab }: PropsType) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   function addNewSchedule(type: ScheduleType) {
     return () =>
@@ -32,14 +24,14 @@ const AddScheduleButtons = ({ tab }: PropsType) => {
   return (
     <Box>
       <Button
-        className={classes.button}
+        sx={{ marginRight: 1 }}
         variant="outlined"
         onClick={addNewSchedule('cron')}
       >
         Add cron expression
       </Button>
       <Button
-        className={classes.button}
+        sx={{ marginRight: 1 }}
         variant="outlined"
         onClick={addNewSchedule('text')}
       >
